@@ -19,33 +19,45 @@ resource "aws_iam_role" "lambda_user_function_role" {
 }
 
 resource "aws_iam_policy" "iam_policy_for_user_function" {
-    name = "lambda_user_function_dynamodb_role"
-    description = "Permission for users function to access Dynamodb table"
-    policy = <<EOF
-    {
-        "Version" : "2012-10-17",
-        "Statement" : [ 
+    name        = "lambda_user_function_dynamodb_role"
+    description = "Permission for users function to access DynamoDB table"
+    policy      = jsonencode({
+        Version   = "2012-10-17"
+        Statement = [
             {
-                "Action" : [
+                Action   = [
                     "logs:CreateLogGroup",
                     "logs:CreateLogStream",
-                    "logs:PutLogEvents"
-                ],
-                "Resource": "arn:aws:logs:*:*:*",
-                "Effect" : "Allow",
+                    "logs:PutLogEvents",
+                ]
+                Resource = "arn:aws:logs:*:*:*"
+                Effect   = "Allow"
+            },
+            {
+                Action = [
+                    "dynamodb:BatchWriteItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:GetItem",
+                    "dynamodb:Scan",
+                    "dynamodb:Query",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem"
+                ]
+                Resource = aws_dynamodb_table.users_table.arn
+                Effect   = "Allow"
             }
         ]
-    }
-    EOF
+    })
 }
 
+
 resource "aws_iam_role_policy_attachment" "attach_lambda_policy_to_lambda_role" {
-    role = aws_iam_role.lambda_user_function_role
+    role = aws_iam_role.lambda_user_function_role.name
     policy_arn = aws_iam_policy.iam_policy_for_user_function.arn
 }
 
 data "archive_file" "zip_the_python_code" {
     type = "zip"
-    source_dir = "${path.module}/../src/"
-    output_path = "${path.module}/../src/tmp/user_function.zip"
+    source_dir = "${path.module}/../src"
+    output_path = "${path.module}/tmp/users_function.zip"
 }
