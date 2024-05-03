@@ -1,20 +1,13 @@
-output "dynamodb_table" {
-    value = aws_dynamodb_table.users_table.name
+output "users_table_name" {
+  description = "DynamoDB Users table"
+  value       = aws_dynamodb_table.users_table.name
 }
 
-output "dynamodb_table_ARN" {
-    value = aws_dynamodb_table.users_table.arn
+output "users_function_name" {
+  description = "Lambda function used to perform actions on the users data"
+  value       = aws_lambda_function.users_function.function_name
 }
 
-output "aws_iam_role" {
-    value = aws_iam_role.lambda_user_function_role.name
-}
-
-output "aws_iam_policy" {
-    value = aws_iam_policy.iam_policy_for_user_function.name
-}
-
-output "lambda_user_function_role" {
-    value = aws_iam_role_policy_attachment.attach_lambda_policy_to_lambda_role
-  
+output "api_endpoint" {
+  value = "${aws_api_gateway_rest_api.api.name}"
 }
