@@ -4,6 +4,6 @@ variable "region" {
     default = "us-east-1"
 }
 
-variable "workshop_stack_base_name" {
+variable "default_project_name" {
     default = "tf-serverless-patterns"
 }
