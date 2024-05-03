@@ -1,7 +1,7 @@
 resource "aws_dynamodb_table" "users_table" {
-  name           = "Users-Table_Dev_V1"
+  name           = "${var.default_project_name}-Users"
   billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "_id"
+  hash_key       = "userid"
 
   # attribute {
   #   name = "userid"
@@ -9,7 +9,7 @@ resource "aws_dynamodb_table" "users_table" {
   # }
 
   attribute {
-    name = "_id"
+    name = "userid"
     type = "S"
   }
 
